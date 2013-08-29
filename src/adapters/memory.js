@@ -21,7 +21,7 @@ Lawnchair.adapter('memory', (function(){
 
         save: function(obj, cb) {
             var key = obj.key || this.uuid()
-            
+
             this.exists(key, function(exists) {
                 if (!exists) {
                     if (obj.key) delete obj.key
@@ -29,7 +29,7 @@ Lawnchair.adapter('memory', (function(){
                 }
 
                 this.store[key] = obj
-                
+
                 if (cb) {
                     obj.key = key
                     this.lambda(cb).call(this, obj)
@@ -62,7 +62,7 @@ Lawnchair.adapter('memory', (function(){
                 if (r) r.key = keyOrArray
             }
             if (cb) this.lambda(cb).call(this, r)
-            return this 
+            return this
         },
 
         exists: function (key, cb) {

@@ -1,12 +1,12 @@
 /**
- * dom storage adapter 
- * === 
+ * dom storage adapter
+ * ===
  * - originally authored by Joseph Pecoraro
  *
- */ 
+ */
 //
 // TODO does it make sense to be chainable all over the place?
-// chainable: nuke, remove, all, get, save, all    
+// chainable: nuke, remove, all, get, save, all
 // not chainable: valid, keys
 //
 Lawnchair.adapter('dom', (function() {
@@ -18,10 +18,10 @@ Lawnchair.adapter('dom', (function() {
             key: name + '._index_',
             // returns the index
             all: function() {
-				var a  = storage.getItem(JSON.stringify(this.key))
-				if (a) {
-					a = JSON.parse(a)
-				}
+                var a  = storage.getItem(JSON.stringify(this.key))
+                if (a) {
+                    a = JSON.parse(a)
+                }
                 if (a === null) storage.setItem(JSON.stringify(this.key), JSON.stringify([])) // lazy init
                 return JSON.parse(storage.getItem(JSON.stringify(this.key)))
             },
@@ -44,17 +44,17 @@ Lawnchair.adapter('dom', (function() {
             find: function (key) {
                 var a = this.all()
                 for (var i = 0, l = a.length; i < l; i++) {
-                    if (key === a[i]) return i 
+                    if (key === a[i]) return i
                 }
                 return false
             }
         }
     }
-    
-    // adapter api 
+
+    // adapter api
     return {
-    
-        // ensure we are in an env with localStorage 
+
+        // ensure we are in an env with localStorage
         valid: function () {
             return !!storage && function() {
               // in mobile safari if safe browsing is enabled, window.storage
@@ -73,12 +73,12 @@ Lawnchair.adapter('dom', (function() {
 
         init: function (options, callback) {
             this.indexer = indexer(this.name)
-            if (callback) this.fn(this.name, callback).call(this, this)  
+            if (callback) this.fn(this.name, callback).call(this, this)
         },
-        
+
         save: function (obj, callback) {
             var key = obj.key ? this.name + '.' + obj.key : this.name + '.' + this.uuid()
-            // now we kil the key and use it in the store colleciton    
+            // now we kil the key and use it in the store colleciton
             delete obj.key;
             storage.setItem(key, JSON.stringify(obj))
             // if the key is not in the index push it on
@@ -101,7 +101,7 @@ Lawnchair.adapter('dom', (function() {
             if (callback) this.lambda(callback).call(this, saved)
             return this
         },
-       
+
         // accepts [options], callback
         keys: function(callback) {
             if (callback) {
@@ -120,7 +120,7 @@ Lawnchair.adapter('dom', (function() {
             }
             return this // TODO options for limit/offset, return promise
         },
-        
+
         get: function (key, callback) {
             if (this.isArray(key)) {
                 var r = []
@@ -128,9 +128,9 @@ Lawnchair.adapter('dom', (function() {
                     var k = this.name + '.' + key[i]
                     var obj = storage.getItem(k)
                     if (obj) {
-						obj = JSON.parse(obj)
+                        obj = JSON.parse(obj)
                         obj.key = key[i]
-                    } 
+                    }
                     r.push(obj)
                 }
                 if (callback) this.lambda(callback).call(this, r)
@@ -138,9 +138,9 @@ Lawnchair.adapter('dom', (function() {
                 var k = this.name + '.' + key
                 var  obj = storage.getItem(k)
                 if (obj) {
-					obj = JSON.parse(obj)
-					obj.key = key
-				}
+                    obj = JSON.parse(obj)
+                    obj.key = key
+                }
                 if (callback) this.lambda(callback).call(this, obj)
             }
             return this
@@ -167,7 +167,7 @@ Lawnchair.adapter('dom', (function() {
             if (callback) this.fn(this.name, callback).call(this, r)
             return this
         },
-        
+
         remove: function (keyOrArray, callback) {
             var self = this;
             if (this.isArray(keyOrArray)) {
@@ -192,7 +192,7 @@ Lawnchair.adapter('dom', (function() {
             if (callback) this.lambda(callback).call(this)
             return this
         },
-        
+
         nuke: function (callback) {
             this.all(function(r) {
                 for (var i = 0, l = r.length; i < l; i++) {
@@ -200,6 +200,6 @@ Lawnchair.adapter('dom', (function() {
                 }
                 if (callback) this.lambda(callback).call(this)
             })
-            return this 
+            return this
         }
 }})());
