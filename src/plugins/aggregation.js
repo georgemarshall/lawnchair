@@ -1,3 +1,4 @@
+'use strict';
 Lawnchair.plugin({
 
     // count of rows in the lawnchair collection with property

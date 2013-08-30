@@ -16,6 +16,7 @@ var p = new Lawnchair({name:'people', record:'person'}, function() {
 // chaining friendly
 p.page(1, 'console.log(page.people)').each('console.log(person)')
 */
+'use strict';
 Lawnchair.plugin({
 
     page: function (page, callback) {

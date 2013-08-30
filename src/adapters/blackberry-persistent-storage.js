@@ -5,6 +5,7 @@
  * - See http://www.github.com/phonegap/phonegap-blackberry
  *
  */
+'use strict';
 Lawnchair.adapter('blackberry-persistent-storage', (function() {
     // Private helper.
     var isObjectAsString = function(value) {

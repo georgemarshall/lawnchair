@@ -7,6 +7,7 @@
 //
 // Oh, what a tangled web we weave when a callback is what we use to receive - jrschifa
 //
+'use strict';
 Lawnchair.adapter('chrome-storage', (function() {
     var storage = chrome.storage.local
 

@@ -4,7 +4,7 @@
  * - originally authored by Vivian Li
  *
  */
-
+'use strict';
 Lawnchair.adapter('indexed-db', (function() {
 
     function fail(e, i) { console.error('error in indexed-db adapter!', e, i); }

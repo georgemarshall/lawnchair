@@ -2,6 +2,7 @@
  * ie userdata adaptor
  *
  */
+'use strict';
 Lawnchair.adapter('ie-userdata', {
 
     valid: function () {

@@ -1,4 +1,5 @@
 // I would mark my relationship with javascript as 'its complicated'
+'use strict';
 Lawnchair.plugin((function(){
 
     // methods we want to augment with before/after callback registery capability

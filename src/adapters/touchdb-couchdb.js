@@ -1,5 +1,6 @@
 // Original author: Chris Anderson jchris@couchbase.com
 // Copyright 2013 Couchbase
+'use strict';
 Lawnchair.adapter('touchdb-couchdb', (function() {
     function makePath (base, path) {
         var k, q, query = [], first = true, uri;

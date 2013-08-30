@@ -2,6 +2,7 @@
 // - simple query syntax 'its just javascript'
 // - simple string interpolation
 // - search then sorting
+'use strict';
 Lawnchair.plugin((function(){
     //
     var interpolate = function(template, args) {

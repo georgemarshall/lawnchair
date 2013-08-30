@@ -33,7 +33,7 @@
 // file. Gears may use these objects to transparently fix bugs and compatibility
 // issues. Applications that use the code below will continue to work seamlessly
 // when that happens.
-
+'use strict';
 (function() {
     // We are already defined. Hooray!
     if (window.google && google.gears) {

@@ -1,3 +1,4 @@
+'use strict';
 Lawnchair.adapter('webkit-sqlite', (function () {
     // private methods
     var fail = function (e, i) { console.error('error in sqlite adaptor!', e, i) }

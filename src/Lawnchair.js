@@ -4,6 +4,7 @@
  * clientside json store
  *
  */
+'use strict';
 var Lawnchair = function (options, callback) {
     // ensure Lawnchair was called as a constructor
     if (!(this instanceof Lawnchair)) return new Lawnchair(options, callback);

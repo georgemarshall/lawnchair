@@ -1,4 +1,5 @@
 // window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
+'use strict';
 Lawnchair.adapter('window-name', (function() {
     if (typeof window==='undefined') {
         window = { top: { } }; // node/optimizer compatibility

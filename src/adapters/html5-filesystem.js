@@ -1,3 +1,4 @@
+'use strict';
 Lawnchair.adapter('html5-filesystem', (function(global) {
 
     var StorageInfo = global.StorageInfo || global.webkitStorageInfo || {};
