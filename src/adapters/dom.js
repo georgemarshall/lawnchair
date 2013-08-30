@@ -18,35 +18,34 @@ Lawnchair.adapter('dom', (function() {
             key: name + '._index_',
             // returns the index
             all: function() {
-				var a  = storage.getItem(JSON.stringify(this.key))
-				if (a) {
-					a = JSON.parse(a)
-				}
-                if (a === null) storage.setItem(JSON.stringify(this.key), JSON.stringify([])) // lazy init
-                return JSON.parse(storage.getItem(JSON.stringify(this.key)))
+                var a  = storage.getItem(this.key);
+                if (a === null) {
+                    a = [];
+                    storage.setItem(this.key, JSON.stringify(a)); // lazy init
+                } else {
+                    a = JSON.parse(a);
+                }
+                return a;
             },
             // adds a key to the index
             add: function (key) {
                 var a = this.all()
                 a.push(key)
-                storage.setItem(JSON.stringify(this.key), JSON.stringify(a))
+                storage.setItem(this.key, JSON.stringify(a));
             },
             // deletes a key from the index
             del: function (key) {
-                var a = this.all(), r = []
-                // FIXME this is crazy inefficient but I'm in a strata meeting and half concentrating
-                for (var i = 0, l = a.length; i < l; i++) {
-                    if (a[i] != key) r.push(a[i])
-                }
-                storage.setItem(JSON.stringify(this.key), JSON.stringify(r))
+                var a = this.all();
+                a = a.filter(function(item) {
+                    return item != key;
+                });
+                storage.setItem(this.key, JSON.stringify(a));
             },
             // returns index for a key
             find: function (key) {
-                var a = this.all()
-                for (var i = 0, l = a.length; i < l; i++) {
-                    if (key === a[i]) return i 
-                }
-                return false
+                var a = this.all(),
+                    i = a.indexOf(key);
+                return (i !== -1) ? i : false;
             }
         }
     }
@@ -59,31 +58,35 @@ Lawnchair.adapter('dom', (function() {
             return !!storage && function() {
               // in mobile safari if safe browsing is enabled, window.storage
               // is defined but setItem calls throw exceptions.
-              var success = true
-              var value = Math.random()
+              var success = true,
+                  value = Math.random();
               try {
-                storage.setItem(value, value)
+                  storage.setItem(value, value);
               } catch (e) {
-                success = false
+                  success = false;
               }
-              storage.removeItem(value)
-              return success
-            }()
+              storage.removeItem(value);
+              return success;
+            }();
         },
 
         init: function (options, callback) {
-            this.indexer = indexer(this.name)
-            if (callback) this.fn(this.name, callback).call(this, this)  
+            this.stringify = options.stringify_key || false;
+
+            var name = this.stringify ? JSON.stringify(this.name) : this.name;
+            this.indexer = indexer(name);
+            if (callback) this.fn(this.name, callback).call(this, this)
         },
         
         save: function (obj, callback) {
-            var key = obj.key ? this.name + '.' + obj.key : this.name + '.' + this.uuid()
+            var name = this.stringify ? JSON.stringify(this.name) : this.name,
+                key = obj.key ? name + '.' + obj.key : name + '.' + this.uuid();
             // now we kil the key and use it in the store colleciton    
             delete obj.key;
             storage.setItem(key, JSON.stringify(obj))
             // if the key is not in the index push it on
             if (this.indexer.find(key) === false) this.indexer.add(key)
-            obj.key = key.slice(this.name.length + 1)
+            obj.key = key.slice(name.length + 1)
             if (callback) {
                 this.lambda(callback).call(this, obj)
             }
@@ -105,9 +108,9 @@ Lawnchair.adapter('dom', (function() {
         // accepts [options], callback
         keys: function(callback) {
             if (callback) {
-                var name = this.name
-                var indices = this.indexer.all();
-                var keys = [];
+                var name = this.stringify ? JSON.stringify(this.name) : this.name,
+                    indices = this.indexer.all(),
+                    keys = [];
                 //Checking for the support of map.
                 if(Array.prototype.map) {
                     keys = indices.map(function(r){ return r.replace(name + '.', '') })
@@ -122,10 +125,11 @@ Lawnchair.adapter('dom', (function() {
         },
         
         get: function (key, callback) {
+            var name = this.stringify ? JSON.stringify(this.name) : this.name;
             if (this.isArray(key)) {
                 var r = []
                 for (var i = 0, l = key.length; i < l; i++) {
-                    var k = this.name + '.' + key[i]
+                    var k = name + '.' + key[i]
                     var obj = storage.getItem(k)
                     if (obj) {
 						obj = JSON.parse(obj)
@@ -135,7 +139,7 @@ Lawnchair.adapter('dom', (function() {
                 }
                 if (callback) this.lambda(callback).call(this, r)
             } else {
-                var k = this.name + '.' + key
+                var k = name + '.' + key
                 var  obj = storage.getItem(k)
                 if (obj) {
 					obj = JSON.parse(obj)
@@ -147,13 +151,15 @@ Lawnchair.adapter('dom', (function() {
         },
 
         exists: function (key, cb) {
-            var exists = this.indexer.find(this.name+'.'+key) === false ? false : true ;
+            var name = this.stringify ? JSON.stringify(this.name) : this.name,
+                exists = this.indexer.find(name + '.' + key) !== false;
             this.lambda(cb).call(this, exists);
             return this;
         },
         // NOTE adapters cannot set this.__results but plugins do
         // this probably should be reviewed
         all: function (callback) {
+            var name = this.stringify ? JSON.stringify(this.name) : this.name;
             var idx = this.indexer.all()
             ,   r   = []
             ,   o
@@ -161,7 +167,7 @@ Lawnchair.adapter('dom', (function() {
             for (var i = 0, l = idx.length; i < l; i++) {
                 k     = idx[i] //v
                 o     = JSON.parse(storage.getItem(k))
-                o.key = k.replace(this.name + '.', '')
+                o.key = k.replace(name + '.', '')
                 r.push(o)
             }
             if (callback) this.fn(this.name, callback).call(this, r)
@@ -185,8 +191,8 @@ Lawnchair.adapter('dom', (function() {
                     removeOne(i);
                 return this;
             }
-            var key = this.name + '.' +
-                ((keyOrArray.key) ? keyOrArray.key : keyOrArray)
+            var name = this.stringify ? JSON.stringify(this.name) : this.name,
+                key = name + '.' + ((keyOrArray.key) ? keyOrArray.key : keyOrArray);
             this.indexer.del(key)
             storage.removeItem(key)
             if (callback) this.lambda(callback).call(this)
