@@ -1,13 +1,13 @@
-Lawnchair.adapter('html5-filesystem', (function(global){
+Lawnchair.adapter('html5-filesystem', (function(global) {
 
     var StorageInfo = global.StorageInfo || global.webkitStorageInfo || {};
     var TEMPORARY = global.TEMPORARY || StorageInfo.TEMPORARY;
     var PERSISTENT = global.PERSISTENT || StorageInfo.PERSISTENT;
     var BlobBuilder = global.BlobBuilder || global.WebKitBlobBuilder;
     // BlobBuilder is depricated, use Blob
-    if(BlobBuilder){
+    if (BlobBuilder) {
         console.error('this browser has not depricated BlobBuilder. you probably want to update.');
-    }else{
+    } else {
         console.log('this modern browser has depricated BlobBuilder, use Blob instead')
         // see: https://developer.mozilla.org/en-US/docs/DOM/Blob#Blob_constructor_example_usage
     }

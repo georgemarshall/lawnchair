@@ -8,7 +8,7 @@ Lawnchair.adapter('ie-userdata', {
         return typeof(document.body.addBehavior) != 'undefined';
     },
 
-    init:function(options, callback){
+    init: function(options, callback) {
         var s = document.createElement('span');
         s.style.behavior = 'url(\'#default#userData\')';
         s.style.position = 'absolute';
@@ -19,7 +19,7 @@ Lawnchair.adapter('ie-userdata', {
         this.fn(this.name, callback).call(this, this)
     },
 
-    get:function(key, callback){
+    get: function(key, callback) {
 
         var obj = JSON.parse(this.storage.getAttribute(key) || 'null');
         if (obj) {
@@ -29,7 +29,7 @@ Lawnchair.adapter('ie-userdata', {
         return this;
     },
 
-    save:function(obj, callback){
+    save: function(obj, callback) {
         var id = obj.key || 'lc' + this.uuid();
             delete obj.key;
         this.storage.setAttribute(id, JSON.stringify(obj));
@@ -41,7 +41,7 @@ Lawnchair.adapter('ie-userdata', {
         return this;
     },
 
-    all:function(callback){
+    all: function(callback) {
         var ca = this.storage.XMLDocument.firstChild.attributes;
         var yar = [];
         var v,o;
@@ -58,7 +58,7 @@ Lawnchair.adapter('ie-userdata', {
         return this;
     },
 
-    remove:function(keyOrObj,callback) {
+    remove: function(keyOrObj,callback) {
         var key = (typeof keyOrObj == 'string') ?  keyOrObj : keyOrObj.key;
         this.storage.removeAttribute(key);
         this.storage.save(this.name);
@@ -66,7 +66,7 @@ Lawnchair.adapter('ie-userdata', {
         return this;
     },
 
-    nuke:function(callback) {
+    nuke: function(callback) {
         var that = this;
         this.all(function(r){
             for (var i = 0, l = r.length; i < l; i++) {

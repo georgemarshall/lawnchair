@@ -1,4 +1,4 @@
-Lawnchair.adapter('memory', (function(){
+Lawnchair.adapter('memory', (function() {
 
     var data = {}
 
@@ -6,7 +6,7 @@ Lawnchair.adapter('memory', (function(){
         valid: function() { return true },
 
         init: function (options, callback) {
-            data[this.name] = data[this.name] || {index:[],store:{}}
+            data[this.name] = data[this.name] || {index: [], store: {}}
             this.index = data[this.name].index
             this.store = data[this.name].store
             var cb = this.fn(this.name, callback)
