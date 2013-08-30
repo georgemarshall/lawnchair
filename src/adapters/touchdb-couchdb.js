@@ -1,6 +1,6 @@
 // Original author: Chris Anderson jchris@couchbase.com
 // Copyright 2013 Couchbase
-Lawnchair.adapter('touchdb-couchdb', (function(){
+Lawnchair.adapter('touchdb-couchdb', (function() {
     function makePath (base, path) {
         var k, q, query = [], first = true, uri;
         if (path) {
@@ -77,10 +77,10 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
             };
             return $.ajax(opts);
         }
-        function allReq(){
+        function allReq() {
             return dbReq.apply("GET", arguments);
         };
-        "get put post head del".split(" ").forEach(function(v){
+        "get put post head del".split(" ").forEach(function(v) {
             allReq[v] = function() {
                 var type;
                 if (v == "del") {
@@ -140,7 +140,7 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
 
         keys: function (cb) {
             var self = this;
-            this.db("_all_docs", function(err, view){
+            this.db("_all_docs", function(err, view) {
                 var ids = [];
                 if (!err && view.rows) {
                     ids = view.rows.map(function(r){return r.id;});
@@ -152,7 +152,7 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
         save: function(obj, cb) {
             obj._id = obj.key = obj.key || this.uuid();
             var self = this;
-            forceSave(self.db, [obj], function(err){
+            forceSave(self.db, [obj], function(err) {
                 if (err) throw(err);
                 if (cb) {
                     self.lambda(cb).call(self, obj)
@@ -167,7 +167,7 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
                 obj._id = obj.key = obj.key || self.uuid();
                 return obj;
             });
-            forceSave(self.db, objs, function(err){
+            forceSave(self.db, objs, function(err) {
                 if (err) throw(err);
                 if (cb) {
                     self.lambda(cb).call(self, objs)
@@ -182,7 +182,7 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
             this.db.post(["_all_docs", {include_docs:true}], {keys:keys}, function(err, view) {
                 if (err) throw (err);
                 var docs = [];
-                view.rows.forEach(function(r){
+                view.rows.forEach(function(r) {
                     docs.push(r.doc||null);
                 });
                 if (cb) {
@@ -197,7 +197,7 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
         },
 
         exists: function (key, cb) {
-            this.get(key, function(doc){
+            this.get(key, function(doc) {
                 this.lambda(cb).call(this, !!doc);
             });
             return this;
@@ -205,7 +205,7 @@ Lawnchair.adapter('touchdb-couchdb', (function(){
 
         all: function (cb) {
             var self = this;
-            this.db(["_all_docs", {include_docs:true}], function(err, view){
+            this.db(["_all_docs", {include_docs:true}], function(err, view) {
                 var docs = [];
                 if (!err && view.rows) {
                     docs = view.rows.map(function(r){return r.doc;});

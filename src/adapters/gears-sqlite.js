@@ -93,10 +93,10 @@
  *
  */
 Lawnchair.adapter('gears-sqlite', {
-        valid: function() {
-            return window.google && window.google.gears;
-        },
-    init:function(options) {
+    valid: function() {
+        return window.google && window.google.gears;
+    },
+    init: function(options) {
         var that = this;
         var merge = that.merge;
         var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
@@ -106,7 +106,7 @@ Lawnchair.adapter('gears-sqlite', {
         this.db.open(this.name);
         this.db.execute('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');
     },
-    save:function(obj, callback) {
+    save: function(obj, callback) {
         var that = this;
 
         var insert = function(obj, callback) {
@@ -151,7 +151,7 @@ Lawnchair.adapter('gears-sqlite', {
         }
 
     },
-    get:function(key, callback) {
+    get: function(key, callback) {
         var rs = this.db.execute("SELECT * FROM " + this.table + " WHERE id = ?", [key]);
 
         if (rs.isValidRow()) {
@@ -165,7 +165,7 @@ Lawnchair.adapter('gears-sqlite', {
             callback(null);
         }
     },
-    all:function(callback) {
+    all: function(callback) {
         var cb  = this.terseToVerboseCallback(callback);
         var rs  = this.db.execute("SELECT * FROM " + this.table);
         var r       = [];
@@ -184,18 +184,18 @@ Lawnchair.adapter('gears-sqlite', {
         rs.close();
         cb(r);
     },
-    remove:function(keyOrObj, callback) {
+    remove: function(keyOrObj, callback) {
         this.db.execute(
             "DELETE FROM " + this.table + " WHERE id = ?",
             [(typeof keyOrObj == 'string') ? keyOrObj : keyOrObj.key]
         );
         if(callback)
-          callback();
+            callback();
     },
-    nuke:function(callback) {
+    nuke: function(callback) {
         this.db.execute("DELETE FROM " + this.table);
         if(callback)
-          callback();
+            callback();
         return this;
     }
 });

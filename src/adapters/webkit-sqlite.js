@@ -61,34 +61,34 @@ Lawnchair.adapter('webkit-sqlite', (function () {
         },
         // you think thats air you're breathing now?
         save: function (obj, callback, error) {
-          var that = this
-          ,   objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = that.uuid()} return o})
-          ,   ins  = "INSERT OR REPLACE INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
-          ,   win  = function () { if (callback) { that.lambda(callback).call(that, that.isArray(obj)?objs:objs[0]) }}
-          ,   error= error || function() {}
-          ,   insvals = []
-          ,   ts = now()
+            var that = this
+            ,   objs = (this.isArray(obj) ? obj : [obj]).map(function(o){if(!o.key) { o.key = that.uuid()} return o})
+            ,   ins  = "INSERT OR REPLACE INTO " + this.record + " (value, timestamp, id) VALUES (?,?,?)"
+            ,   win  = function () { if (callback) { that.lambda(callback).call(that, that.isArray(obj)?objs:objs[0]) }}
+            ,   error= error || function() {}
+            ,   insvals = []
+            ,   ts = now()
 
-          try {
-            for (var i = 0, l = objs.length; i < l; i++) {
-              insvals[i] = [JSON.stringify(objs[i]), ts, objs[i].key];
+            try {
+                for (var i = 0, l = objs.length; i < l; i++) {
+                    insvals[i] = [JSON.stringify(objs[i]), ts, objs[i].key];
+                }
+            } catch (e) {
+                fail(e)
+                throw e;
             }
-          } catch (e) {
-            fail(e)
-            throw e;
-          }
 
              that.db.transaction(function(t) {
             for (var i = 0, l = objs.length; i < l; i++)
               t.executeSql(ins, insvals[i])
-             }, function(e,i){fail(e,i)}, win)
+             }, function(e, i) { fail(e, i) }, win)
 
-          return this
+            return this
         },
 
 
         batch: function (objs, callback) {
-          return this.save(objs, callback)
+            return this.save(objs, callback)
         },
 
         get: function (keyOrArray, cb) {
@@ -151,7 +151,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
 
         remove: function (keyOrArray, cb) {
             var that = this
-                        ,   args
+            ,   args
             ,   sql  = "DELETE FROM " + this.record + " WHERE id "
             ,   win  = function () { if (cb) that.lambda(cb).call(that) }
                         if (!this.isArray(keyOrArray)) {
@@ -160,7 +160,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
                         } else {
                             args = keyOrArray;
                             sql += "IN (" +
-                                args.map(function(){return '?'}).join(',') +
+                                args.map(function() { return '?' }).join(',') +
                                 ")";
                         }
                         args = args.map(function(obj) {
@@ -177,7 +177,7 @@ Lawnchair.adapter('webkit-sqlite', (function () {
         nuke: function (cb) {
             var nuke = "DELETE FROM " + this.record
             ,   that = this
-            ,   win  = cb ? function() { that.lambda(cb).call(that) } : function(){}
+            ,   win  = cb ? function() { that.lambda(cb).call(that) } : function() {}
                 this.db.transaction(function (t) {
                 t.executeSql(nuke, [], win, fail)
             })
