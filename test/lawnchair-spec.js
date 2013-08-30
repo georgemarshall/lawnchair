@@ -3,7 +3,7 @@ module('Lawnchair construction/destruction', {
     setup:function() {
         QUnit.stop();
         // Clear the store to prevent invalid store data killing the tests.
-        // e.g. Memory adapter together with "json cyclic" test 
+        // e.g. Memory adapter together with "json cyclic" test
         //      will break test "ctor requires callbacks in each form".
         store.nuke(function() { QUnit.start(); });
     },
@@ -40,7 +40,7 @@ test('ctor only calls callback if passed one', function() {
             QUnit.equal(ref, this, "lawnchair passes self into callback too")
         });
     } catch(e) {
-    	ok(false, 'exception raised when using obj+function ctor form')
+        ok(false, 'exception raised when using obj+function ctor form')
     }
     try {
         var lc = new Lawnchair(function(ref) {
@@ -121,7 +121,7 @@ test('full callback syntax', function() {
         QUnit.deepEqual(this, store, '"this" should be scoped to the lawnchair object inside callback');
         QUnit.start();
     });
-}) 
+})
 
 test('adding, nuking and size tests', function() {
     QUnit.stop();
@@ -133,7 +133,7 @@ test('adding, nuking and size tests', function() {
             store.nuke(function() {
                 store.all(function(r) {
                     QUnit.equal(r.length, 0, 'parameter should have length 0 after nuking');
-                    QUnit.start();                    
+                    QUnit.start();
                 });
             });
         });
@@ -163,20 +163,20 @@ test('scoped variable in shorthand callback', function() {
 
     // FIXME fkn qunit being weird here... expect(1)
     var tmp = new Lawnchair({name:'temps', record:'tmp'}, function() {
-		this.nuke(function() {
-			this.save({a:1}, function() {
-				this.each('ok(tmp, "this.record is passed to each callback"); QUnit.start()')
-			})
-		})
+        this.nuke(function() {
+            this.save({a:1}, function() {
+                this.each('ok(tmp, "this.record is passed to each callback"); QUnit.start()')
+            })
+        })
     })
 })
 
 module('nuke()', {
     setup:function() {
-		QUnit.stop();
-        store.nuke(function() { 
-			QUnit.start() 
-		});
+        QUnit.stop();
+        store.nuke(function() {
+            QUnit.start()
+        });
     },
     teardown:function() {
     }
@@ -184,7 +184,7 @@ module('nuke()', {
 
 test( 'chainable', function() {
     QUnit.expect(1);
-	QUnit.stop()
+    QUnit.stop()
 
     QUnit.deepEqual(store.nuke(function() { QUnit.start() }), store, 'should be chainable');
 })
@@ -225,7 +225,7 @@ test('json serialization on cyclic reference fails', function() {
                 QUnit.start();
             });
         }, function(error) {
-	    // make sure the store can be loaded
+        // make sure the store can be loaded
             store.all(function(r) {
                 QUnit.equal(r.length, 0, 'after saving failed, num. records should equal to 0');
                 QUnit.start();
@@ -279,7 +279,7 @@ test( 'shorthand callback syntax', function() {
     store.save(me, 'ok(true, "shorthand syntax callback gets evaled"); QUnit.deepEqual(this, store, "`this` should be scoped to the Lawnchair instance"); QUnit.start();');
 })
 
-test( 'saving objects', function() { 
+test( 'saving objects', function() {
     QUnit.stop();
     QUnit.expect(1);
 
@@ -450,24 +450,24 @@ test('batch large utf-8 dataset', function() {
 
   var largeBatchSet = [];
   for(var i = 0; i < setSize; i++) {
-	 var utf8text="Tyttebærsyltetøy 炒飯 寿司 김치 bœuf bourguignon ปอเปี๊ยะ μουσακάς водка ";
-	 largeBatchSet[i]={ key: "batchKey-" + i, value: utf8text + i };
+     var utf8text="Tyttebærsyltetøy 炒飯 寿司 김치 bœuf bourguignon ปอเปี๊ยะ μουσακάς водка ";
+     largeBatchSet[i]={ key: "batchKey-" + i, value: utf8text + i };
   }
 
   var done=0;
   var _check = function(key, value){
-	 store.get(key, function(r){
-		QUnit.equal(r.value, value, 'batch large value matches');
-		if(++done == setSize) QUnit.start();
-	 });
+     store.get(key, function(r){
+        QUnit.equal(r.value, value, 'batch large value matches');
+        if(++done == setSize) QUnit.start();
+     });
   };
 
   store.batch(largeBatchSet, function(results) {
-	 QUnit.equal(largeBatchSet.length, results.length, "batch large results object and input have same length");
-	 for(var i = 0; i < setSize; i++) {
-		var l = largeBatchSet[i];
-		_check(l.key, l.value);
-	 };
+     QUnit.equal(largeBatchSet.length, results.length, "batch large results object and input have same length");
+     for(var i = 0; i < setSize; i++) {
+        var l = largeBatchSet[i];
+        _check(l.key, l.value);
+     };
   });
 
 
@@ -536,7 +536,7 @@ test('get batch functionality', function() {
             QUnit.equal(r.length, t.length, "should batch get")
             QUnit.start()
         })
-    }) 
+    })
 });
 
 test( 'full callback syntax', function() {
@@ -597,10 +597,10 @@ test( 'chainable', function() {
     QUnit.stop();
 
     store.save({key:'me', name:'brian'}, function() {
-        QUnit.deepEqual(store.remove('me', function() { 
-                QUnit.start(); 
+        QUnit.deepEqual(store.remove('me', function() {
+                QUnit.start();
              }), store, 'should be chainable');
-         
+
     });
 });
 
@@ -647,7 +647,7 @@ test( 'remove functionality', function() {
             });
         //});
     });
-}); 
+});
 
 test( 'remove functionality (part 2)', function() {
     QUnit.stop();
