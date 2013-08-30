@@ -1,9 +1,9 @@
 /**
- * chrome.storage storage adapter 
- * === 
+ * chrome.storage storage adapter
+ * ===
  * - originally authored by Joseph Pecoraro
  *
- */ 
+ */
 //
 // Oh, what a tangled web we weave when a callback is what we use to receive - jrschifa
 //
@@ -40,8 +40,8 @@ Lawnchair.adapter('chrome-storage', (function() {
 
                             if (obj === null || typeof obj === 'undefined') {
                                 obj = initStorage()
-                            } 
-                            
+                            }
+
                             if (callback) {
                                 callback(obj)
                             }
@@ -56,22 +56,22 @@ Lawnchair.adapter('chrome-storage', (function() {
             add: function (key) {
                 this.all(function(a) {
                     a.push(key)
-                
+
                     var _set = {}
                     _set[this.key] = JSON.stringify(a)
                     storage.set(_set)
-                })  
+                })
             },
             // deletes a key from the index
             del: function (key) {
                 var r = []
-                this.all(function(a) {    
+                this.all(function(a) {
                     for (var i = 0, l = a.length; i < l; i++) {
                         if (a[i] != key) r.push(a[i])
-                    } 
+                    }
 
                     var _set = {}
-                    _set[this.key] = JSON.stringify(r) 
+                    _set[this.key] = JSON.stringify(r)
                     storage.set(_set)
                 })
             },
@@ -81,19 +81,19 @@ Lawnchair.adapter('chrome-storage', (function() {
                     for (var i = 0, l = a.length; i < l; i++) {
                         if (key === a[i]) {
                             if (callback) callback(i)
-                        } 
+                        }
                     }
-                    
+
                     if (callback) callback(false)
-                })    
+                })
             }
         }
     }
-    
-    // adapter api 
+
+    // adapter api
     return {
-    
-        // ensure we are in an env with chrome.storage 
+
+        // ensure we are in an env with chrome.storage
         valid: function () {
             return !!storage && function() {
                 // in mobile safari if safe browsing is enabled, window.storage
@@ -115,14 +115,14 @@ Lawnchair.adapter('chrome-storage', (function() {
 
         init: function (options, callback) {
             this.indexer = indexer(this.name)
-            if (callback) this.fn(this.name, callback).call(this, this)  
+            if (callback) this.fn(this.name, callback).call(this, this)
         },
-        
+
         save: function (obj, callback) {
             var key = obj.key ? this.name + '.' + obj.key : this.name + '.' + this.uuid()
             // if the key is not in the index push it on
             if (this.indexer.find(key) === false) this.indexer.add(key)
-            // now we kil the key and use it in the store colleciton    
+            // now we kil the key and use it in the store colleciton
             delete obj.key;
             var _set = {}
             _set[key] = JSON.stringify(obj)
@@ -145,17 +145,17 @@ Lawnchair.adapter('chrome-storage', (function() {
             if (callback) this.lambda(callback).call(this, saved)
             return this
         },
-       
+
         // accepts [options], callback
         keys: function(callback) {
-            if (callback) { 
+            if (callback) {
                 var _this = this
                 var name = this.name
                 var keys
 
                 this.indexer.all(function(data) {
                     keys = data.map(function(r) {
-                       return r.replace(name + '.', '')   
+                       return r.replace(name + '.', '')
                     })
 
                     _this.fn('keys', callback).call(_this, keys)
@@ -163,7 +163,7 @@ Lawnchair.adapter('chrome-storage', (function() {
             }
             return this
         },
-        
+
         get: function (key, callback) {
             var _this = this
             var obj
@@ -190,7 +190,7 @@ Lawnchair.adapter('chrome-storage', (function() {
                 }
             } else {
                 var k = this.name + '.' + key
-                
+
                 storage.get(k, function(items) {
                     if (items) {
                         for (itemKey in items) {
@@ -198,9 +198,9 @@ Lawnchair.adapter('chrome-storage', (function() {
                             obj = JSON.parse(obj)
                             obj.key = itemKey.replace(_this.name + '.', '')
                         }
-                    }  
+                    }
                     if (callback) _this.lambda(callback).call(_this, obj)
-                })        
+                })
             }
             return this
         },
@@ -209,9 +209,9 @@ Lawnchair.adapter('chrome-storage', (function() {
             var _this = this
             this.indexer.find((this.name+'.'+key), function(response) {
                 response = (response === false) ? false : true;
-                _this.lambda(callback).call(_this, response)            
+                _this.lambda(callback).call(_this, response)
             })
-            
+
             return this;
         },
         // NOTE adapters cannot set this.__results but plugins do
@@ -238,16 +238,16 @@ Lawnchair.adapter('chrome-storage', (function() {
 
                             if (i == l) {
                                 if (callback) _this.fn(_this.name, callback).call(_this, r)
-                            } 
+                            }
                         })
                     }
                 } else {
                     if (callback) _this.fn(_this.name, callback).call(_this, r)
-                }    
+                }
             })
-            return this  
+            return this
         },
-        
+
         remove: function (keyOrObj, callback) {
             var key = this.name + '.' + ((keyOrObj.key) ? keyOrObj.key : keyOrObj)
             this.indexer.del(key)
@@ -255,7 +255,7 @@ Lawnchair.adapter('chrome-storage', (function() {
             if (callback) this.lambda(callback).call(this)
             return this
         },
-        
+
         nuke: function (callback) {
             //could probably just use storage.clear() hear
             this.all(function(r) {
@@ -265,6 +265,6 @@ Lawnchair.adapter('chrome-storage', (function() {
                 }
                 if (callback) this.lambda(callback).call(this)
             })
-            return this 
+            return this
         }
 }})());

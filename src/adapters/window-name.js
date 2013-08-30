@@ -9,14 +9,14 @@ Lawnchair.adapter('window-name', (function() {
     // put simple strings in there - we should make sure not to cause a SyntaxError.
     var data = {}
     try {
-        data = JSON.parse(window.top.name)    
+        data = JSON.parse(window.top.name)
     } catch (e) {}
-    
-    
+
+
     return {
 
         valid: function () {
-            return typeof window.top.name != 'undefined' 
+            return typeof window.top.name != 'undefined'
         },
 
         init: function (options, callback) {
@@ -72,7 +72,7 @@ Lawnchair.adapter('window-name', (function() {
             if (cb) this.lambda(cb).call(this, r)
             return this
         },
-        
+
         get: function (keyOrArray, cb) {
             var r;
             if (this.isArray(keyOrArray)) {
@@ -85,9 +85,9 @@ Lawnchair.adapter('window-name', (function() {
                 if (r) r.key = keyOrArray
             }
             if (cb) this.lambda(cb).call(this, r)
-            return this 
+            return this
         },
-        
+
         exists: function (key, cb) {
             this.lambda(cb).call(this, !!(this.store[key]))
             return this
@@ -103,7 +103,7 @@ Lawnchair.adapter('window-name', (function() {
             this.fn(this.name, cb).call(this, r)
             return this
         },
-        
+
         remove: function (keyOrArray, cb) {
             var del = this.isArray(keyOrArray) ? keyOrArray : [keyOrArray]
             for (var i = 0, l = del.length; i < l; i++) {
